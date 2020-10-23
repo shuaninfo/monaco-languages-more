@@ -1,5 +1,4 @@
-// The MIT License (MIT)
-'use strict';
+import * as oracle from 'oracle';
 export const oracleLanguageDefinition = {
 	id: 'oracle',
 	extensions: ['.oracle'],

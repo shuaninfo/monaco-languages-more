@@ -20,17 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-'use strict';
-
-import IRichLanguageConfiguration = monaco.languages.LanguageConfiguration;
-import ILanguage = monaco.languages.IMonarchLanguage;
-import ProviderResult = monaco.languages.ProviderResult;
-import CompletionList = monaco.languages.CompletionList;
-import CompletionItemProvider = monaco.languages.CompletionItemProvider;
-import CompletionItem = monaco.languages.CompletionItem;
-
-// noinspection JSUnusedGlobalSymbols
-export const languageConfiguration: IRichLanguageConfiguration = {
+export const languageConfiguration = {
 	// the default separators except `@$`
 	wordPattern: /(-?\d*\.\d\w*)|([^`~!#%^&*()\-=+\[{\]}\\|;:'",.<>\/?\s]+)/g,
 	// Not possible to make comments in PromQL syntax
@@ -38,24 +28,55 @@ export const languageConfiguration: IRichLanguageConfiguration = {
 		lineComment: '#',
 	},
 	brackets: [
-		[ '{', '}' ],
-		[ '[', ']' ],
-		[ '(', ')' ],
+		['{', '}'],
+		['[', ']'],
+		['(', ')'],
 	],
-	autoClosingPairs: [
-		{open: '{', close: '}'},
-		{open: '[', close: ']'},
-		{open: '(', close: ')'},
-		{open: '"', close: '"'},
-		{open: '\'', close: '\''},
+	autoClosingPairs: [{
+			open: '{',
+			close: '}'
+		},
+		{
+			open: '[',
+			close: ']'
+		},
+		{
+			open: '(',
+			close: ')'
+		},
+		{
+			open: '"',
+			close: '"'
+		},
+		{
+			open: '\'',
+			close: '\''
+		},
 	],
-	surroundingPairs: [
-		{open: '{', close: '}'},
-		{open: '[', close: ']'},
-		{open: '(', close: ')'},
-		{open: '"', close: '"'},
-		{open: '\'', close: '\''},
-		{open: '<', close: '>'},
+	surroundingPairs: [{
+			open: '{',
+			close: '}'
+		},
+		{
+			open: '[',
+			close: ']'
+		},
+		{
+			open: '(',
+			close: ')'
+		},
+		{
+			open: '"',
+			close: '"'
+		},
+		{
+			open: '\'',
+			close: '\''
+		},
+		{
+			open: '<',
+			close: '>'
+		},
 	],
 	folding: {}
 };
@@ -74,7 +95,7 @@ const aggregations = [
 	'count_values',
 	'bottomk',
 	'topk',
-	'quantile',
+	'quantile'
 ];
 
 // PromQL functions
@@ -155,7 +176,8 @@ const offsetModifier = [
 ];
 
 // Merging all the keywords in one list
-const keywords = aggregations.concat(functions).concat(aggregationsOverTime).concat(vectorMatching).concat(offsetModifier);
+const keywords = aggregations.concat(functions).concat(aggregationsOverTime).concat(vectorMatching).concat(
+	offsetModifier);
 
 // noinspection JSUnusedGlobalSymbols
 export const language = {
@@ -183,87 +205,89 @@ export const language = {
 		root: [
 
 			// 'by', 'without' and vector matching
-			[ /@vectorMatching\s*(?=\()/, 'type', '@clauses' ],
+			[/@vectorMatching\s*(?=\()/, 'type', '@clauses'],
 
 			// labels
-			[ /[a-z_]\w*(?=\s*(=|!=|=~|!~))/, 'tag' ],
+			[/[a-z_]\w*(?=\s*(=|!=|=~|!~))/, 'tag'],
 
 			// comments
-			[ /(^#.*$)/, 'comment' ],
+			[/(^#.*$)/, 'comment'],
 
 			// all keywords have the same color
-			[ /[a-zA-Z_]\w*/, {
+			[/[a-zA-Z_]\w*/, {
 				cases: {
 					'@keywords': 'type',
 					'@default': 'identifier'
 				}
-			} ],
+			}],
 
 			// strings
-			[ /"([^"\\]|\\.)*$/, 'string.invalid' ],  // non-teminated string
-			[ /'([^'\\]|\\.)*$/, 'string.invalid' ],  // non-teminated string
-			[ /"/, 'string', '@string_double' ],
-			[ /'/, 'string', '@string_single' ],
-			[ /`/, 'string', '@string_backtick' ],
+			[/"([^"\\]|\\.)*$/, 'string.invalid'], // non-teminated string
+			[/'([^'\\]|\\.)*$/, 'string.invalid'], // non-teminated string
+			[/"/, 'string', '@string_double'],
+			[/'/, 'string', '@string_single'],
+			[/`/, 'string', '@string_backtick'],
 
 			// whitespace
-			{include: '@whitespace'},
+			{
+				include: '@whitespace'
+			},
 
 			// delimiters and operators
-			[ /[{}()\[\]]/, '@brackets' ],
-			[ /[<>](?!@symbols)/, '@brackets' ],
-			[ /@symbols/, {
+			[/[{}()\[\]]/, '@brackets'],
+			[/[<>](?!@symbols)/, '@brackets'],
+			[/@symbols/, {
 				cases: {
 					'@operators': 'delimiter',
 					'@default': ''
 				}
-			} ],
+			}],
 
 			// numbers
-			[ /\d+[smhdwy]/, 'number' ], // 24h, 5m are often encountered in prometheus
-			[ /\d*\d+[eE]([\-+]?\d+)?(@floatsuffix)/, 'number.float' ],
-			[ /\d*\.\d+([eE][\-+]?\d+)?(@floatsuffix)/, 'number.float' ],
-			[ /0[xX][0-9a-fA-F']*[0-9a-fA-F](@integersuffix)/, 'number.hex' ],
-			[ /0[0-7']*[0-7](@integersuffix)/, 'number.octal' ],
-			[ /0[bB][0-1']*[0-1](@integersuffix)/, 'number.binary' ],
-			[ /\d[\d']*\d(@integersuffix)/, 'number' ],
-			[ /\d(@integersuffix)/, 'number' ],
+			[/\d+[smhdwy]/, 'number'], // 24h, 5m are often encountered in prometheus
+			[/\d*\d+[eE]([\-+]?\d+)?(@floatsuffix)/, 'number.float'],
+			[/\d*\.\d+([eE][\-+]?\d+)?(@floatsuffix)/, 'number.float'],
+			[/0[xX][0-9a-fA-F']*[0-9a-fA-F](@integersuffix)/, 'number.hex'],
+			[/0[0-7']*[0-7](@integersuffix)/, 'number.octal'],
+			[/0[bB][0-1']*[0-1](@integersuffix)/, 'number.binary'],
+			[/\d[\d']*\d(@integersuffix)/, 'number'],
+			[/\d(@integersuffix)/, 'number'],
 		],
 
 		string_double: [ // eslint-disable-line @typescript-eslint/camelcase
-			[ /[^\\"]+/, 'string' ],
-			[ /@escapes/, 'string.escape' ],
-			[ /\\./, 'string.escape.invalid' ],
-			[ /"/, 'string', '@pop' ]
+			[/[^\\"]+/, 'string'],
+			[/@escapes/, 'string.escape'],
+			[/\\./, 'string.escape.invalid'],
+			[/"/, 'string', '@pop']
 		],
 
-		string_single: [  // eslint-disable-line @typescript-eslint/camelcase
-			[ /[^\\']+/, 'string' ],
-			[ /@escapes/, 'string.escape' ],
-			[ /\\./, 'string.escape.invalid' ],
-			[ /'/, 'string', '@pop' ]
+		string_single: [ // eslint-disable-line @typescript-eslint/camelcase
+			[/[^\\']+/, 'string'],
+			[/@escapes/, 'string.escape'],
+			[/\\./, 'string.escape.invalid'],
+			[/'/, 'string', '@pop']
 		],
 
-		string_backtick: [  // eslint-disable-line @typescript-eslint/camelcase
-			[ /[^\\`$]+/, 'string' ],
-			[ /@escapes/, 'string.escape' ],
-			[ /\\./, 'string.escape.invalid' ],
-			[ /`/, 'string', '@pop' ]
+		string_backtick: [ // eslint-disable-line @typescript-eslint/camelcase
+			[/[^\\`$]+/, 'string'],
+			[/@escapes/, 'string.escape'],
+			[/\\./, 'string.escape.invalid'],
+			[/`/, 'string', '@pop']
 		],
 
 		clauses: [
-			[ /[^(,)]/, 'tag' ],
-			[ /\)/, 'identifier', '@pop' ]
+			[/[^(,)]/, 'tag'],
+			[/\)/, 'identifier', '@pop']
 		],
 
 		whitespace: [
-			[ /[ \t\r\n]+/, 'white' ],
+			[/[ \t\r\n]+/, 'white'],
 		],
 	},
-} as ILanguage;
+};
 
 // noinspection JSUnusedGlobalSymbols
-export const completionItemProvider: CompletionItemProvider = {
+export const completionItemProvider = {
 	provideCompletionItems: () => {
 
 		// To simplify, we made the choice to never create automatically the parenthesis behind keywords
@@ -274,10 +298,11 @@ export const completionItemProvider: CompletionItemProvider = {
 				kind: monaco.languages.CompletionItemKind.Keyword,
 				insertText: value,
 				insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-			} as CompletionItem
+			}
 		});
 
-		return {suggestions} as ProviderResult<CompletionList>;
+		return {
+			suggestions
+		};
 	}
 };
-
