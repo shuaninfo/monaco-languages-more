@@ -27,7 +27,8 @@ export default {
 	mounted() {
 		let $dom = document.getElementById('monaco-editor');
 		this.editor = monaco.editor.create($dom, {
-			language: 'oracle',
+			value:`abs()`,
+			language: this.language, // oracle
 			wordWrap: 'on',
 			theme: 'vs', // 默认
 			automaticLayout: true,
@@ -48,8 +49,8 @@ export default {
 	data() {
 		return {
 			editor: null,
-			language: '',
-			selects: [{ label: 'PromQL', value: 'promql' },{ label: 'Oracle', value: 'oracle' }, { label: 'mmsql', value: 'mmsql' }, { label: 'mongodb', value: 'mongodb' }, { label: 'radis', value: 'radis' }]
+			language: 'oracle',
+			selects: [{ label: 'SQL', value: 'sql' },{ label: 'Oracle', value: 'oracle' },{ label: 'PromQL', value: 'promql' }, { label: 'mmsql', value: 'mmsql' }, { label: 'mongodb', value: 'mongodb' }, { label: 'radis', value: 'radis' }]
 		};
 	}
 };

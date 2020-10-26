@@ -100,46 +100,6 @@ const aggregations = [
 
 // PromQL functions
 // (https://prometheus.io/docs/prometheus/latest/querying/functions/)
-const functions = [
-	'abs',
-	'absent',
-	'ceil',
-	'changes',
-	'clamp_max',
-	'clamp_min',
-	'day_of_month',
-	'day_of_week',
-	'days_in_month',
-	'delta',
-	'deriv',
-	'exp',
-	'floor',
-	'histogram_quantile',
-	'holt_winters',
-	'hour',
-	'idelta',
-	'increase',
-	'irate',
-	'label_join',
-	'label_replace',
-	'ln',
-	'log2',
-	'log10',
-	'minute',
-	'month',
-	'predict_linear',
-	'rate',
-	'resets',
-	'round',
-	'scalar',
-	'sort',
-	'sort_desc',
-	'sqrt',
-	'time',
-	'timestamp',
-	'vector',
-	'year',
-];
 
 // PromQL specific functions: Aggregations over time
 // (https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time)
@@ -163,11 +123,6 @@ const vectorMatchingRegex = `(${vectorMatching.reduce((prev, curr) => `${prev}|$
 
 // PromQL Operators
 // (https://prometheus.io/docs/prometheus/latest/querying/operators/)
-const operators = [
-	'+', '-', '*', '/', '%', '^',
-	'==', '!=', '>', '<', '>=', '<=',
-	'and', 'or', 'unless',
-];
 
 // PromQL offset modifier
 // (https://prometheus.io/docs/prometheus/latest/querying/basics/#offset-modifier)
@@ -176,18 +131,62 @@ const offsetModifier = [
 ];
 
 // Merging all the keywords in one list
-const keywords = aggregations.concat(functions).concat(aggregationsOverTime).concat(vectorMatching).concat(
+const keywords = aggregations.concat(aggregationsOverTime).concat(vectorMatching).concat(
 	offsetModifier);
 
 // noinspection JSUnusedGlobalSymbols
 export const language = {
 	ignoreCase: false,
 	defaultToken: '',
-	tokenPostfix: '.promql',
+	tokenPostfix: '.sql',
 
-	keywords: keywords,
+	keywords: ['promql', ...keywords],
 
-	operators: operators,
+	operators: [
+		'+', '-', '*', '/', '%', '^',
+		'==', '!=', '>', '<', '>=', '<=',
+		'AND', 'OR', 'UNLESS',
+	],
+	builtinFunctions: [
+		'ABS',
+		'ABSENT',
+		'CEIL',
+		'CHANGES',
+		'CLAMP_MAX',
+		'CLAMP_MIN',
+		'DAY_OF_MONTH',
+		'DAY_OF_WEEK',
+		'DAYS_IN_MONTH',
+		'DELTA',
+		'DERIV',
+		'EXP',
+		'FLOOR',
+		'HISTOGRAM_QUANTILE',
+		'HOLT_WINTERS',
+		'HOUR',
+		'IDELTA',
+		'INCREASE',
+		'IRATE',
+		'LABEL_JOIN',
+		'LABEL_REPLACE',
+		'LN',
+		'LOG2',
+		'LOG10',
+		'MINUTE',
+		'MONTH',
+		'PREDICT_LINEAR',
+		'RATE',
+		'RESETS',
+		'ROUND',
+		'SCALAR',
+		'SORT',
+		'SORT_DESC',
+		'SQRT',
+		'TIME',
+		'TIMESTAMP',
+		'VECTOR',
+		'YEAR',
+	],
 	vectorMatching: vectorMatchingRegex,
 
 	// we include these common regular expressions
@@ -284,25 +283,4 @@ export const language = {
 			[/[ \t\r\n]+/, 'white'],
 		],
 	},
-};
-
-// noinspection JSUnusedGlobalSymbols
-export const completionItemProvider = {
-	provideCompletionItems: () => {
-
-		// To simplify, we made the choice to never create automatically the parenthesis behind keywords
-		// It is because in PromQL, some keywords need parenthesis behind, some don't, some can have but it's optional.
-		const suggestions = keywords.map(value => {
-			return {
-				label: value,
-				kind: monaco.languages.CompletionItemKind.Keyword,
-				insertText: value,
-				insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-			}
-		});
-
-		return {
-			suggestions
-		};
-	}
 };

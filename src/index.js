@@ -1,3 +1,5 @@
+import functionExt from './_ext/function.js';
+
 import {
 	promLanguageDefinition
 } from './promql/promql.contribution';
@@ -57,6 +59,18 @@ export const register = function(langs, isAutoComplete) {
 	if (!langs || typeof langs != 'Array' || langs.length > 0) {
 		console.warn('[language-more] register(arg0, arg1)请使用正确的参数列表：arguments(Array, Boolean)')
 	}
+	
+	// 自定义主题
+	// monaco.editor.defineTheme('logTheme', {
+	//     base: 'vs',
+	//     inherit: true,
+	//     rules: [
+	//         { token: 'custom-info', foreground: '808080' },
+	//         { token: 'custom-error', foreground: 'ff0000', fontStyle: 'bold' },
+	//         { token: 'custom-warning', foreground: 'FFA500' }
+	//     ]
+	// });
+	
 	let result = {}
 	if (langs[0] == 'all') {
 		// 全部
@@ -87,6 +101,7 @@ export const register = function(langs, isAutoComplete) {
  */
 function _register(definition, isAutoComplete) {
 	let languageId = definition.id;
+	console.log('languageId',languageId)
 	monaco.languages.register(definition);
 	monaco.languages.onLanguage(languageId, () => {
 		definition.loader().then(mod => {
@@ -97,9 +112,36 @@ function _register(definition, isAutoComplete) {
 
 			// 自动提示
 			if (!!isAutoComplete) {
+				// mod.language.keywords
 				// TODO 判断当前语言
-				monaco.languages.registerCompletionItemProvider(languageId, mod.completionItemProvider);
+				let keyword = provideItem(mod.language.keywords, 'Keyword')
+				let operator = provideItem(mod.language.operators, 'Operator')
+				let builtinFunction = provideItem(mod.language.builtinFunctions, 'Function')
+				let suggestions = [...keyword, ...operator, ...builtinFunction]
+				monaco.languages.registerCompletionItemProvider(languageId, {
+					provideCompletionItems: (model) => {
+						let index = monaco.editor.getModels().indexOf(model)
+						console.log('index： ', index)
+
+						return {
+							suggestions
+						};
+					}
+				});
 			}
 		});
 	});
+}
+
+
+// 提示对象构造函数
+const provideItem = (obj, kind) => {
+	return obj.map(value => {
+		return {
+			label: value,
+			insertText: !!functionExt[value] ? `${value}${functionExt[value]}` : value,
+			kind: monaco.languages.CompletionItemKind[kind],
+			insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+		}
+	})
 }

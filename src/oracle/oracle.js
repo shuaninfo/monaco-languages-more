@@ -68,7 +68,8 @@ export const language = {
 	// 忽略大小写
 	ignoreCase: true,
 	defaultToken: '',
-	tokenPostfix: '.oracle',
+	// 使用SQL的token class
+	tokenPostfix: '.sql',
 	brackets: [{
 			open: '[',
 			close: ']',
@@ -195,6 +196,7 @@ export const language = {
 		'ROWS',
 		'WITH'
 	],
+	// 操作列表
 	operators: [
 		// Logical
 		'ALL',
@@ -231,6 +233,7 @@ export const language = {
 		// Merging
 		'MATCHED'
 	],
+	// 函数列表
 	builtinFunctions: [
 		'ABS',
 		'ACOS',
@@ -560,24 +563,4 @@ export const language = {
 		]
 	}
 
-};
-
-// noinspection JSUnusedGlobalSymbols
-export const completionItemProvider = {
-	provideCompletionItems: (model) => {
-		// let index = monaco.editor.getModels().indexOf(model)
-		// console.log('index： ', index)
-		const suggestions = language.keywords.map(value => {
-			return {
-				label: value,
-				kind: monaco.languages.CompletionItemKind.Keyword,
-				insertText: value,
-				insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-			}
-		});
-
-		return {
-			suggestions
-		};
-	}
 };
