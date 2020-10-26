@@ -1,5 +1,8 @@
 <template>
 	<div id="app">
+		<div style="padding: 3px 5px;margin-bottom: 10px; background-color: white;">
+			<p style="color: red;">暂时只支持：PromQL、Oracle</p>
+		</div>
 		<select id="languages" v-model="language" @change="selectChangeHandler" style="min-width: 200px; margin-bottom: 10px;">
 			<option v-for="(item, i) in selects" :value="item.value">{{ item.label }}</option>
 		</select>
@@ -7,7 +10,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script>
 import * as monaco from 'monaco-editor';
 // import * as languages from '../dist/index.js';
 import * as languages from '../src/index.js';
@@ -19,27 +22,12 @@ export default {
 		// 	promLanguageDefinition
 		console.log(languages)
 		languages.about()
-		languages.register()
-		// let promLanguageDefinition = languages.promLanguageDefinition;
-		
-		// const languageId = promLanguageDefinition.id;
-		// monaco.languages.register(promLanguageDefinition);
-		// monaco.languages.onLanguage(languageId, () => {
-		// 	promLanguageDefinition.loader().then(mod => {
-		// 		// 高亮
-		// 		monaco.languages.setMonarchTokensProvider(languageId, mod.language);
-		// 		// 配置
-		// 		monaco.languages.setLanguageConfiguration(languageId, mod.languageConfiguration);
-				
-		// 		// 自动提示
-		// 		monaco.languages.registerCompletionItemProvider(languageId, mod.completionItemProvider);
-		// 	});
-		// });
+		languages.register(['oracle','promql'], true)
 	},
 	mounted() {
 		let $dom = document.getElementById('monaco-editor');
 		this.editor = monaco.editor.create($dom, {
-			language: 'promql',
+			language: 'oracle',
 			wordWrap: 'on',
 			theme: 'vs', // 默认
 			automaticLayout: true,
@@ -48,8 +36,10 @@ export default {
 	},
 	methods: {
 		selectChangeHandler() {
-			console.log('language: ', this.language);
-			// TODO 更改自动提示
+			console.log('language: ', this.editor.getModel().getModeId());
+			let model = this.editor.getModel()
+			monaco.editor.setModelLanguage(model, this.language)
+			console.log(this.editor.getModel().getModeId())
 		},
 		auto(language) {
 			// TODO 设置激动提示
@@ -59,7 +49,7 @@ export default {
 		return {
 			editor: null,
 			language: '',
-			selects: [{ label: 'Oracle', value: 'oracle' }, { label: 'mmsql', value: 'mmsql' }, { label: 'mongodb', value: 'mongodb' }, { label: 'radis', value: 'radis' }]
+			selects: [{ label: 'PromQL', value: 'promql' },{ label: 'Oracle', value: 'oracle' }, { label: 'mmsql', value: 'mmsql' }, { label: 'mongodb', value: 'mongodb' }, { label: 'radis', value: 'radis' }]
 		};
 	}
 };

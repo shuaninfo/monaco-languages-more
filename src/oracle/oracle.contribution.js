@@ -1,4 +1,4 @@
-import * as oracle from 'oracle';
+import * as oracle from './oracle';
 export const oracleLanguageDefinition = {
 	id: 'oracle',
 	extensions: ['.oracle'],

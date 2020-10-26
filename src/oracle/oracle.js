@@ -3,13 +3,9 @@
 // Copyright (c) Celian Garcia and Augustin Husson @ Amadeus IT Group
 //
 // 参考 https://docs.oracle.com/cd/B19306_01/appdev.102/b14354/appb.htm#BABIGBBI
-'use strict';
-
-import IRichLanguageConfiguration = monaco.languages.LanguageConfiguration;
-import ILanguage = monaco.languages.IMonarchLanguage;
 
 // noinspection JSUnusedGlobalSymbols
-export const languageConfiguration: IRichLanguageConfiguration = {
+export const languageConfiguration = {
 	// the default separators except `@$`
 	// wordPattern: /(-?\d*\.\d\w*)|([^`~!#%^&*()\-=+\[{\]}\\|;:'",.<>\/?\s]+)/g,
 	// Not possible to make comments in PromQL syntax
@@ -22,19 +18,47 @@ export const languageConfiguration: IRichLanguageConfiguration = {
 		['[', ']'],
 		['(', ')']
 	],
-	autoClosingPairs: [
-		{ open: '{', close: '}' },
-		{ open: '[', close: ']' },
-		{ open: '(', close: ')' },
-		{ open: '"', close: '"' },
-		{ open: "'", close: "'" }
+	autoClosingPairs: [{
+			open: '{',
+			close: '}'
+		},
+		{
+			open: '[',
+			close: ']'
+		},
+		{
+			open: '(',
+			close: ')'
+		},
+		{
+			open: '"',
+			close: '"'
+		},
+		{
+			open: "'",
+			close: "'"
+		}
 	],
-	surroundingPairs: [
-		{ open: '{', close: '}' },
-		{ open: '[', close: ']' },
-		{ open: '(', close: ')' },
-		{ open: '"', close: '"' },
-		{ open: "'", close: "'" }
+	surroundingPairs: [{
+			open: '{',
+			close: '}'
+		},
+		{
+			open: '[',
+			close: ']'
+		},
+		{
+			open: '(',
+			close: ')'
+		},
+		{
+			open: '"',
+			close: '"'
+		},
+		{
+			open: "'",
+			close: "'"
+		}
 	],
 	folding: {}
 };
@@ -45,9 +69,16 @@ export const language = {
 	ignoreCase: true,
 	defaultToken: '',
 	tokenPostfix: '.oracle',
-	brackets: [
-		{ open: '[', close: ']', token: 'delimiter.square' },
-		{ open: '(', close: ')', token: 'delimiter.parenthesis' }
+	brackets: [{
+			open: '[',
+			close: ']',
+			token: 'delimiter.square'
+		},
+		{
+			open: '(',
+			close: ')',
+			token: 'delimiter.parenthesis'
+		}
 	],
 	keywords: [
 		'oracle',
@@ -382,14 +413,27 @@ export const language = {
 	],
 	pseudoColumns: ['$ACTION', '$IDENTITY', '$ROWGUID', '$PARTITION'],
 	tokenizer: {
-		root: [
-			{ include: '@comments' },
-			{ include: '@whitespace' },
-			{ include: '@pseudoColumns' },
-			{ include: '@numbers' },
-			{ include: '@strings' },
-			{ include: '@complexIdentifiers' },
-			{ include: '@scopes' },
+		root: [{
+				include: '@comments'
+			},
+			{
+				include: '@whitespace'
+			},
+			{
+				include: '@pseudoColumns'
+			},
+			{
+				include: '@numbers'
+			},
+			{
+				include: '@strings'
+			},
+			{
+				include: '@complexIdentifiers'
+			},
+			{
+				include: '@scopes'
+			},
 			[/[;,.]/, 'delimiter'],
 			[/[()]/, '@brackets'],
 			[
@@ -406,17 +450,25 @@ export const language = {
 			],
 			[/[<>=!%&+\-*/|~^]/, 'operator']
 		],
-		whitespace: [[/\s+/, 'white']],
+		whitespace: [
+			[/\s+/, 'white']
+		],
 		comments: [
 			[/--+.*/, 'comment'],
-			[/\/\*/, { token: 'comment.quote', next: '@comment' }]
+			[/\/\*/, {
+				token: 'comment.quote',
+				next: '@comment'
+			}]
 		],
 		comment: [
 			[/[^*/]+/, 'comment'],
 			// Not supporting nested comments, as nested comments seem to not be standard?
 			// i.e. http://stackoverflow.com/questions/728172/are-there-multiline-comment-delimiters-in-sql-that-are-vendor-agnostic
 			// [/\/\*/, { token: 'comment.quote', next: '@push' }],    // nested comment not allowed :-(
-			[/\*\//, { token: 'comment.quote', next: '@pop' }],
+			[/\*\//, {
+				token: 'comment.quote',
+				next: '@pop'
+			}],
 			[/./, 'comment']
 		],
 		pseudoColumns: [
@@ -436,59 +488,96 @@ export const language = {
 			[/((\d+(\.\d*)?)|(\.\d+))([eE][\-+]?\d+)?/, 'number']
 		],
 		strings: [
-			[/N'/, { token: 'string', next: '@string' }],
-			[/'/, { token: 'string', next: '@string' }]
+			[/N'/, {
+				token: 'string',
+				next: '@string'
+			}],
+			[/'/, {
+				token: 'string',
+				next: '@string'
+			}]
 		],
 		string: [
 			[/[^']+/, 'string'],
 			[/''/, 'string'],
-			[/'/, { token: 'string', next: '@pop' }]
+			[/'/, {
+				token: 'string',
+				next: '@pop'
+			}]
 		],
 		complexIdentifiers: [
-			[/\[/, { token: 'identifier.quote', next: '@bracketedIdentifier' }],
-			[/"/, { token: 'identifier.quote', next: '@quotedIdentifier' }]
+			[/\[/, {
+				token: 'identifier.quote',
+				next: '@bracketedIdentifier'
+			}],
+			[/"/, {
+				token: 'identifier.quote',
+				next: '@quotedIdentifier'
+			}]
 		],
 		bracketedIdentifier: [
 			[/[^\]]+/, 'identifier'],
 			[/]]/, 'identifier'],
-			[/]/, { token: 'identifier.quote', next: '@pop' }]
+			[/]/, {
+				token: 'identifier.quote',
+				next: '@pop'
+			}]
 		],
 		quotedIdentifier: [
 			[/[^"]+/, 'identifier'],
 			[/""/, 'identifier'],
-			[/"/, { token: 'identifier.quote', next: '@pop' }]
+			[/"/, {
+				token: 'identifier.quote',
+				next: '@pop'
+			}]
 		],
 		scopes: [
 			[/BEGIN\s+(DISTRIBUTED\s+)?TRAN(SACTION)?\b/i, 'keyword'],
-			[/BEGIN\s+TRY\b/i, { token: 'keyword.try' }],
-			[/END\s+TRY\b/i, { token: 'keyword.try' }],
-			[/BEGIN\s+CATCH\b/i, { token: 'keyword.catch' }],
-			[/END\s+CATCH\b/i, { token: 'keyword.catch' }],
-			[/(BEGIN|CASE)\b/i, { token: 'keyword.block' }],
-			[/END\b/i, { token: 'keyword.block' }],
-			[/WHEN\b/i, { token: 'keyword.choice' }],
-			[/THEN\b/i, { token: 'keyword.choice' }]
+			[/BEGIN\s+TRY\b/i, {
+				token: 'keyword.try'
+			}],
+			[/END\s+TRY\b/i, {
+				token: 'keyword.try'
+			}],
+			[/BEGIN\s+CATCH\b/i, {
+				token: 'keyword.catch'
+			}],
+			[/END\s+CATCH\b/i, {
+				token: 'keyword.catch'
+			}],
+			[/(BEGIN|CASE)\b/i, {
+				token: 'keyword.block'
+			}],
+			[/END\b/i, {
+				token: 'keyword.block'
+			}],
+			[/WHEN\b/i, {
+				token: 'keyword.choice'
+			}],
+			[/THEN\b/i, {
+				token: 'keyword.choice'
+			}]
 		]
 	}
 
-} as ILanguage;
+};
 
 // noinspection JSUnusedGlobalSymbols
-// export const completionItemProvider: CompletionItemProvider = {
-// 	provideCompletionItems: () => {
+export const completionItemProvider = {
+	provideCompletionItems: (model) => {
+		// let index = monaco.editor.getModels().indexOf(model)
+		// console.log('index： ', index)
+		const suggestions = language.keywords.map(value => {
+			return {
+				label: value,
+				kind: monaco.languages.CompletionItemKind.Keyword,
+				insertText: value,
+				insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+			}
+		});
 
-// 		// To simplify, we made the choice to never create automatically the parenthesis behind keywords
-// 		// It is because in PromQL, some keywords need parenthesis behind, some don't, some can have but it's optional.
-// 		const suggestions = keywords.map(value => {
-// 			return {
-// 				label: value,
-// 				kind: monaco.languages.CompletionItemKind.Keyword,
-// 				insertText: value,
-// 				insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-// 			} as CompletionItem
-// 		});
-
-// 		return {suggestions} as ProviderResult<CompletionList>;
-// 	}
-// };
-
+		return {
+			suggestions
+		};
+	}
+};
