@@ -10,6 +10,7 @@ import {
 
 // 统一导出语言配置
 export {
+	functionExt,
 	promLanguageDefinition,
 	oracleLanguageDefinition
 };

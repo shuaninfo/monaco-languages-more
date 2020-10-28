@@ -1,8 +1,6 @@
 <template>
 	<div id="app">
-		<div style="padding: 3px 5px;margin-bottom: 10px; background-color: white;">
-			<p style="color: red;">暂时只支持：PromQL、Oracle</p>
-		</div>
+		<div style="padding: 3px 5px;margin-bottom: 10px; background-color: white;"><p style="color: red;">暂时只支持：PromQL、Oracle</p></div>
 		<select id="languages" v-model="language" @change="selectChangeHandler" style="min-width: 200px; margin-bottom: 10px;">
 			<option v-for="(item, i) in selects" :value="item.value">{{ item.label }}</option>
 		</select>
@@ -20,28 +18,32 @@ import languages from '../dist/index.min.js';
 export default {
 	name: 'App',
 	components: {},
-	created() {
+	async created() {
 		// configeDefinition
-		console.log(languages)
+		console.log(languages);
 		languages.about();
 		// ,'promql'
-		languages.init(['oracle','promql'], true)
+		languages.init(['oracle', 'promql'], true);
 		// console.log('languages._aliases: ',languages._aliases)
 		// languages.setAliases({name:'xxx'})
 		// console.log('languages._aliases： ',languages._aliases)
 		// console.log('获取：',monaco.languages.getLanguages())
-		console.log('============================================')
-		let getLang = 'Redis'
+		console.log('============================================');
+		let getLang = 'sql';
 		let lang = languages.getLanguage(getLang, true);
-		lang.loader().then((e)=>{
-			console.log(getLang,'配置：',e)
+		console.log('lang: ',lang)
+		lang.loader().then(e => {
+			console.log(getLang, '配置：', e);
 		});
-		console.log('monaco现在支持 promql:',languages.getLanguage('promql',true))
+		console.log('monaco现在支持 promql:', languages.getLanguage('promql', true));
+		console.log('============================================');
+		let result = await lang.loader();
+		console.log('[同步] ', getLang, '配置：', result);
 	},
 	mounted() {
 		let $dom = document.getElementById('monaco-editor');
 		this.editor = monaco.editor.create($dom, {
-			value:`abs()`,
+			value: `abs()`,
 			language: this.language, // oracle
 			wordWrap: 'on',
 			theme: 'vs', // 默认
@@ -52,9 +54,9 @@ export default {
 	methods: {
 		selectChangeHandler() {
 			console.log('language: ', this.editor.getModel().getModeId());
-			let model = this.editor.getModel()
-			monaco.editor.setModelLanguage(model, this.language)
-			console.log(this.editor.getModel().getModeId())
+			let model = this.editor.getModel();
+			monaco.editor.setModelLanguage(model, this.language);
+			console.log(this.editor.getModel().getModeId());
 		},
 		auto(language) {
 			// TODO 设置激动提示
@@ -64,7 +66,14 @@ export default {
 		return {
 			editor: null,
 			language: 'oracle',
-			selects: [{ label: 'SQL', value: 'sql' },{ label: 'Oracle', value: 'oracle' },{ label: 'PromQL', value: 'promql' }, { label: 'mmsql', value: 'mmsql' }, { label: 'mongodb', value: 'mongodb' }, { label: 'radis', value: 'radis' }]
+			selects: [
+				{ label: 'SQL', value: 'sql' },
+				{ label: 'Oracle', value: 'oracle' },
+				{ label: 'PromQL', value: 'promql' },
+				{ label: 'mmsql', value: 'mmsql' },
+				{ label: 'mongodb', value: 'mongodb' },
+				{ label: 'radis', value: 'radis' }
+			]
 		};
 	}
 };
