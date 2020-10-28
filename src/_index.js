@@ -82,9 +82,6 @@ export const getLanguage = function(alias, ignoreCase) {
 				return langAlias == alias || (!!ignoreCase && langAlias.toLowerCase() == lowerCaseAlias)
 			})
 			.length > 0;
-		if (lang.id == 'redis') {
-			console.log('-', currentAliases, lang.id, _aliases, _aliases[lang.id])
-		}
 		if (flag) {
 			result = lang;
 			break;
@@ -161,7 +158,6 @@ export const register = function(langs, isAutoComplete) {
 			} // end languages
 		} // end langs
 	}
-	console.log('result ',result)
 	// 循环注册 _register()
 	for (let key in result) {
 		_register(result[key], isAutoComplete)
@@ -193,8 +189,6 @@ function _register(definition, isAutoComplete) {
 				let suggestions = [...keyword, ...operator, ...builtinFunction]
 				monaco.languages.registerCompletionItemProvider(languageId, {
 					provideCompletionItems: (model) => {
-						// let index = monaco.editor.getModels().indexOf(model)
-						// console.log('index： ', index)
 						return {
 							suggestions
 						};

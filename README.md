@@ -6,7 +6,6 @@
 // v1.1.0 window.languages
 import languages from 'monaco-languages-more';
 
-
 // v1.0.0
 import * as languages  from 'monaco-languages-more';
 ```
