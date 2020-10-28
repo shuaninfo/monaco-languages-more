@@ -26,6 +26,9 @@ npm run build:lib
 #### 对外方法 | API
 
 ```javascript
+// 必须先引入monaco
+import * as monaco from 'monaco-editor';
+
 // import * as languages from 'monaco-languages-more';
 import * as languages from '../src/index.js';
 // arg0: 注册语言

@@ -12,8 +12,11 @@
 
 <script>
 import * as monaco from 'monaco-editor';
-import * as languages from '../dist/index.min.js';
-// import * as languages from '../src/index.js';
+// 不推荐 需要在package.json把name改为monaco-languages-more-dev，在能npm i -D monaco-languages-more
+// import * as languages from 'monaco-languages-more';
+
+// import * as languages from '../dist/index.min.js';
+import * as languages from '../src/index.js';
 export default {
 	name: 'App',
 	components: {},
