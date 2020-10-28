@@ -2,7 +2,7 @@ const path = require('path');
 // const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 function resolve(dir) { //- 获取绝对路径
-	return path.join(__dirname,  dir)
+	return path.join(__dirname, dir)
 }
 module.exports = {
 	entry: './src/index.js',
@@ -19,14 +19,13 @@ module.exports = {
 		}
 	},
 	module: {
-		rules: [
-			{
-			                test: /\.vue$/,
-			                loader: 'vue-loader',
-			                options: {
-			                    loaders: {}
-			                }
-			            },
+		rules: [{
+				test: /\.vue$/,
+				loader: 'vue-loader',
+				options: {
+					loaders: {}
+				}
+			},
 			{
 				test: /\.js$/,
 				loader: 'babel-loader',

@@ -1,6 +1,6 @@
 {
 	"name": "monaco-languages-more",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "monaco语言包",
 	"scripts": {
 		"serve": "vue-cli-service serve",
@@ -12,10 +12,10 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://gitee.com/gzcloud/monaco-languages-more"
+		"url": "https://gitee.com/browsers/monaco-languages-more"
 	},
 	"bugs": {
-		"url": "https://gitee.com/gzcloud/monaco-languages-more/issues"
+		"url": "https://gitee.com/browsers/monaco-languages-moreissues"
 	},
 	"keywords": [
 		"oracle",

@@ -5,7 +5,7 @@
 // 参考 https://docs.oracle.com/cd/B19306_01/appdev.102/b14354/appb.htm#BABIGBBI
 
 // noinspection JSUnusedGlobalSymbols
-export const languageConfiguration = {
+export const conf = {
 	// the default separators except `@$`
 	// wordPattern: /(-?\d*\.\d\w*)|([^`~!#%^&*()\-=+\[{\]}\\|;:'",.<>\/?\s]+)/g,
 	// Not possible to make comments in PromQL syntax

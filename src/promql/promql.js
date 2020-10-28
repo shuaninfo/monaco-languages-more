@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-export const languageConfiguration = {
+export const conf = {
 	// the default separators except `@$`
 	wordPattern: /(-?\d*\.\d\w*)|([^`~!#%^&*()\-=+\[{\]}\\|;:'",.<>\/?\s]+)/g,
 	// Not possible to make comments in PromQL syntax
@@ -136,7 +136,7 @@ const keywords = aggregations.concat(aggregationsOverTime).concat(vectorMatching
 
 // noinspection JSUnusedGlobalSymbols
 export const language = {
-	ignoreCase: false,
+	ignoreCase: true,
 	defaultToken: '',
 	tokenPostfix: '.sql',
 
@@ -215,7 +215,10 @@ export const language = {
 			// all keywords have the same color
 			[/[a-zA-Z_]\w*/, {
 				cases: {
-					'@keywords': 'type',
+					'@keywords': 'keyword',
+					'@operators': 'operator',
+					// '@builtinVariables': 'predefined',
+					'@builtinFunctions': 'predefined',
 					'@default': 'identifier'
 				}
 			}],

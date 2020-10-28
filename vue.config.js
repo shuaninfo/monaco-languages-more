@@ -27,27 +27,5 @@ module.exports = {
     config.resolve.alias
 	  .set('~', resolve('examples'))
 	  .set('@dist',resolve('dist'));
-    // config.output
-    //   .set('libraryExport', 'default')
-    //   .set('library', 'VXETable');
-    // if (process.env.npm_lifecycle_event && process.env.npm_lifecycle_event.indexOf('lib') === 0) {
-    //   const XEUtils = {
-    //     root: 'XEUtils',
-    //     commonjs: 'xe-utils/ctor',
-    //     commonjs2: 'xe-utils/ctor',
-    //     amd: 'xe-utils'
-    //   }
-    //   if (config.has('externals')) {
-    //     config.externals
-    //       // .set('xe-utils', XEUtils)
-    //       .set('xe-utils/ctor', XEUtils)
-    //   } else {
-    //     config
-    //       .set('externals', {
-    //         // 'xe-utils': XEUtils,
-    //         'xe-utils/ctor': XEUtils
-    //       })
-    //   }
-    // }
   }
 }

@@ -12,17 +12,27 @@
 
 <script>
 import * as monaco from 'monaco-editor';
-// import * as languages from '../dist/index.js';
-import * as languages from '../src/index.js';
+import * as languages from '../dist/index.min.js';
+// import * as languages from '../src/index.js';
 export default {
 	name: 'App',
 	components: {},
 	created() {
-		// oracleLanguageDefinition
-		// 	promLanguageDefinition
+		// configeDefinition
 		console.log(languages)
-		languages.about()
-		languages.register(['oracle','promql'], true)
+		languages.about();
+		// 
+		languages.init(['oracle','promql'], true)
+		// console.log('languages._aliases: ',languages._aliases)
+		// languages.setAliases({name:'xxx'})
+		// console.log('languages._aliases： ',languages._aliases)
+		// console.log('获取：',monaco.languages.getLanguages())
+		console.log('============================================')
+		let getLang = 'Redis'
+		let lang = languages.getLanguage(getLang, true);
+		lang.loader().then((e)=>{
+			console.log(getLang,'配置：',e)
+		})
 	},
 	mounted() {
 		let $dom = document.getElementById('monaco-editor');
