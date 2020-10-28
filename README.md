@@ -1,3 +1,20 @@
+
+
+### 使用方法
+
+```javascript
+// v1.1.0 window.languages
+import languages from 'monaco-languages-more';
+
+
+// v1.0.0
+import * as languages  from 'monaco-languages-more';
+```
+
+
+
+
+
 @see examples/App.vue
 
 > 基于：[monaco-promql](https://github.com/prometheus-community/monaco-promql)
@@ -29,8 +46,8 @@ npm run build:lib
 // 必须先引入monaco
 import * as monaco from 'monaco-editor';
 
-// import * as languages from 'monaco-languages-more';
-import * as languages from '../src/index.js';
+// import languages from 'monaco-languages-more';
+import languages from '../src/index.js';
 // arg0: 注册语言
 // arg1: 是否开启自动提示
 languages.init(['oracle','promql'], true)

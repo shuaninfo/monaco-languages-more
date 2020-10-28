@@ -15,8 +15,8 @@ import * as monaco from 'monaco-editor';
 // 不推荐 需要在package.json把name改为monaco-languages-more-dev，在能npm i -D monaco-languages-more
 // import * as languages from 'monaco-languages-more';
 
-// import * as languages from '../dist/index.min.js';
-import * as languages from '../src/index.js';
+import languages from '../dist/index.min.js';
+// import languages from '../src/index.js';
 export default {
 	name: 'App',
 	components: {},
@@ -24,7 +24,7 @@ export default {
 		// configeDefinition
 		console.log(languages)
 		languages.about();
-		// 
+		// ,'promql'
 		languages.init(['oracle','promql'], true)
 		// console.log('languages._aliases: ',languages._aliases)
 		// languages.setAliases({name:'xxx'})
@@ -35,7 +35,8 @@ export default {
 		let lang = languages.getLanguage(getLang, true);
 		lang.loader().then((e)=>{
 			console.log(getLang,'配置：',e)
-		})
+		});
+		console.log('monaco现在支持 promql:',languages.getLanguage('promql',true))
 	},
 	mounted() {
 		let $dom = document.getElementById('monaco-editor');
