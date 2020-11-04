@@ -30,7 +30,7 @@ const map = {
 }
 // 示例 (${1:参数}) - (${1:})
 // (${1:arg0}, ${2:arg1})
-module.exports = {
+export default{
 	// 数字函数
 	'ABS': map._,
 	'ACOS': map.x,
