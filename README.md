@@ -98,3 +98,85 @@ languages.setAliases({'go':['go','golang']}, true)
 
 ```
 
+
+
+
+
+## 如何保存操作历史记录
+
+> 目的：页面刷新后任然可以进行撤销操作(ctrl+z, ctrl+y)
+
+1、保存编辑器中的文本：editorInstance.getValue()
+
+2、保存操作历史：
+
+```javascript
+// 保存localStorage或其他
+let model = this.editorInstance.getModel()
+// arg1: 50，保存前50的操作历史，
+let historyObj =languages.getEditStack(model, 50)
+
+// ==== 约等价于 ====
+let historyStr = JSON.stringify({
+     currentOpenStackElement: model['_commandManager'].currentOpenStackElement
+     past: model['_commandManager'].past,
+     future: model['_commandManager'].future
+});
+```
+
+3、刷新页面后载入操作历史**（也需要载入之前编辑器里的代码）**
+
+```javascript
+// editorInstance设置value
+
+// 获取
+let historyObj = // 从localStorage获取并转换为对象
+let model = this.editor.getModel()		
+// 设置操作历史
+languages.setEditStack(model, historyObj)
+
+
+// ==== 约等于 ====
+if(historyObj.past && history.past.length) {
+  model['_commandManager'].past.push(...historyObj.past.map(data => new EditStackElement(data)));
+}
+if(historyObj.future && history.future.length) {
+  model['_commandManager'].future.push(...historyObj.future.map(data => new EditStackElement(data)));
+}
+if(historyObj.currentOpenStackElement){
+	model['_commandManager'].currentOpenStackElement = new EditStackElement(historyObj.currentOpenStackElement)
+}
+```
+
+4、自定义**EditStackElement**类，在第三步中使用
+
+```javascript
+export default class EditStackElement {
+ 	beforeVersionId;
+ 	beforeCursorState;
+ 	afterCursorState;
+ 	afterVersionId = -1;
+ 	editOperations = [];
+ 	constructor(json) {
+ 		for (let key in json) {
+ 			this[key] = json[key];
+ 		}
+ 	}
+ 	undo(model) {
+ 		for (var i = this.editOperations.length - 1; i >= 0; i--) {
+ 			this.editOperations[i] = {
+ 				operations: model.applyEdits(this.editOperations[i].operations)
+ 			};
+ 		}
+ 	} // end undo
+ 	redo(model) {
+ 		for (var i = 0; i < this.editOperations.length; i++) {
+ 			this.editOperations[i] = {
+ 				operations: model.applyEdits(this.editOperations[i].operations)
+ 			};
+ 		}
+ 	} // end redo
+ }
+
+```
+
