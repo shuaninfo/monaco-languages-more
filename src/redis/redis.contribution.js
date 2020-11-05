@@ -1,3 +1,4 @@
+import * as redis from './redis';
 export const redisLanguageDefinition = {
 	id: 'redis',
 	extensions: ['.redis'],

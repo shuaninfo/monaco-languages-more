@@ -5,6 +5,7 @@
 ### 使用方法
 
 ```javascript
+// 请使用最新版，其他版本可能有错 v1.2.2
 // v1.2.0
 import * as languages  from 'monaco-languages-more';
 

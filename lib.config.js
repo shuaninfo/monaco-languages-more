@@ -2,7 +2,7 @@ const path = require('path');
 // const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 function resolve(dir) { //- 获取绝对路径
-	return path.join(__dirname, dir)
+	return path.join(__dirname, '.', dir)
 }
 module.exports = {
 	entry: './src/index.js',
@@ -10,8 +10,9 @@ module.exports = {
 	output: {
 		filename: 'index.min.js',
 		path: path.resolve(__dirname, 'dist'),
+		publicPath:'/',
 		// 无效，不会配置
-		library: "languages",
+		// library: "languages",
 		libraryTarget: "umd"
 	},
 	resolve: {

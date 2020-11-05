@@ -21,8 +21,8 @@ import * as monaco from 'monaco-editor';
 // 不推荐 需要在package.json把name改为monaco-languages-more-dev，在能npm i -D monaco-languages-more
 // import * as languages from 'monaco-languages-more';
 
-// import * as languages from '../dist/index.min.js';
-import * as languages from '../src/index.js';
+import * as languages from '../dist/index.min.js';
+// import * as languages from '../src/index.js';
 
 // const languages = require('../dist/index.min.js')
 import EditStackElement from './stackelement.js';
@@ -124,7 +124,7 @@ this.saveHistoryHandle();
 			if (history) {
 				// 新建一个model
 				// let model = monaco.editor.createModel(this.value, this.language);
-				let model = this.editor.getModel();
+				let model = this.editor.getModel()
 				
 				// TODO 改为
 				languages.setEditStack(model, history)
