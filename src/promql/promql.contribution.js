@@ -1,4 +1,4 @@
-import * as promql from './promql'; 
+// import * as promql from './promql'; 
 export const promLanguageDefinition = {
 	id: 'promql',
 	extensions: [ '.promql' ],

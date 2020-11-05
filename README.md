@@ -1,9 +1,14 @@
 
 
+> webpack配置问题：
+
 ### 使用方法
 
 ```javascript
-// v1.1.0 window.languages
+// v1.2.0
+import * as languages  from 'monaco-languages-more';
+
+// v1.1.0 到 1.1.2 window.languages
 import languages from 'monaco-languages-more';
 
 // v1.0.0
@@ -18,7 +23,7 @@ import * as languages  from 'monaco-languages-more';
 
 > 基于：[monaco-promql](https://github.com/prometheus-community/monaco-promql)
 >
-> support： oracle、promql
+> support： oracle、promql、custom-redis
 
 ```shell
 git clone https://gitee.com/browsers/monaco-languages-more.git

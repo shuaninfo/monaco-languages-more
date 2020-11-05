@@ -10,6 +10,8 @@ module.exports = {
 	output: {
 		filename: 'index.min.js',
 		path: path.resolve(__dirname, 'dist'),
+		// 无效，不会配置
+		library: "languages",
 		libraryTarget: "umd"
 	},
 	resolve: {
@@ -32,6 +34,9 @@ module.exports = {
 				exclude: [
 					path.resolve(__dirname, "node_modules")
 				],
+				options: {
+					"presets": ["@babel/preset-env"]
+				}
 			}
 		]
 	},

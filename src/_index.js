@@ -1,4 +1,11 @@
-import functionExt from './_ext/function.js';
+import {
+	functionExt
+} from './_ext/function.js';
+
+import {
+	getEditStack,
+	setEditStack
+} from './_ext/func.js'
 
 import {
 	promLanguageDefinition
@@ -6,14 +13,23 @@ import {
 import {
 	oracleLanguageDefinition
 } from './oracle/oracle.contribution';
+import {
+	redisLanguageDefinition
+} from './redis/redis.contribution';
 
 
 // 统一导出语言配置
 export {
 	functionExt,
+	getEditStack,
+	setEditStack,
 	promLanguageDefinition,
-	oracleLanguageDefinition
+	oracleLanguageDefinition,
+	redisLanguageDefinition
 };
+
+
+
 
 /**
  * 语言包已经支持的语言
@@ -23,6 +39,7 @@ export const languages = {
 	// key 为Definition.id
 	'promql': promLanguageDefinition,
 	'oracle': oracleLanguageDefinition,
+	'redis': redisLanguageDefinition
 }
 // TODO 使用Object.defineProperty定义languages属性不可改？？
 
@@ -103,10 +120,10 @@ export const getLanguageId = function(alias, ignoreCase) {
  * @param {Object} alias
  * @param {Object} ignoreCase
  */
-export async function getLanguageConfig(alias, ignoreCase){
+export async function getLanguageConfig(alias, ignoreCase) {
 	let lang = getLanguage(alias, ignoreCase);
-	if(!!lang){
-	    let result = await lang.loader();
+	if (!!lang) {
+		let result = await lang.loader();
 		return result;
 	}
 	return null
@@ -114,7 +131,7 @@ export async function getLanguageConfig(alias, ignoreCase){
 
 
 export const about = function() {
-	console.log('monaco语言包，现支持：', Object.keys(languages).join('、'))
+	console.info('monaco语言包，现支持：', Object.keys(languages).join('、'))
 }
 
 
@@ -149,6 +166,7 @@ export const register = function(langs, isAutoComplete) {
 	} else {
 		// 部分
 		for (let i in langs) {
+			// 传入的参数
 			let alias = langs[i]
 			for (let key in languages) {
 				let supportLang = languages[key];
@@ -161,6 +179,7 @@ export const register = function(langs, isAutoComplete) {
 	}
 	// 循环注册 _register()
 	for (let key in result) {
+		// 注册进入monaco
 		_register(result[key], isAutoComplete)
 	}
 	return result
@@ -178,18 +197,20 @@ function _register(definition, isAutoComplete) {
 			// 高亮
 			monaco.languages.setMonarchTokensProvider(languageId, mod.language);
 			// 配置
+			console.log('注册：', languageId)
 			monaco.languages.setLanguageConfiguration(languageId, mod.conf);
 
 			// 自动提示
 			if (!!isAutoComplete) {
 				// mod.language.keywords
 				// TODO 判断当前语言
-				let keyword = provideItem(mod.language.keywords, 'Keyword')
-				let operator = provideItem(mod.language.operators, 'Operator')
-				let builtinFunction = provideItem(mod.language.builtinFunctions, 'Function')
+				let keyword = _provideItem(mod.language.keywords, 'Keyword')
+				let operator = _provideItem(mod.language.operators, 'Operator')
+				let builtinFunction = _provideItem(mod.language.builtinFunctions, 'Function')
 				let suggestions = [...keyword, ...operator, ...builtinFunction]
 				monaco.languages.registerCompletionItemProvider(languageId, {
 					provideCompletionItems: (model) => {
+						// console.log('触发自动提示：',suggestions)
 						return {
 							suggestions
 						};
@@ -202,7 +223,7 @@ function _register(definition, isAutoComplete) {
 
 
 // 提示对象构造函数
-const provideItem = (obj, kind) => {
+const _provideItem = (obj, kind) => {
 	return obj.map(value => {
 		return {
 			label: value,
