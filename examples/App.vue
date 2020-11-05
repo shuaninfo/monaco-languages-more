@@ -19,34 +19,33 @@
 <script>
 import * as monaco from 'monaco-editor';
 // 不推荐 需要在package.json把name改为monaco-languages-more-dev，在能npm i -D monaco-languages-more
-// import * as languages from 'monaco-languages-more';
 
 import * as languages from '../dist/index.min.js';
 // import * as languages from '../src/index.js';
 
-// const languages = require('../dist/index.min.js')
 import EditStackElement from './stackelement.js';
 export default {
 	name: 'App',
 	async created() {
 		// configeDefinition
+		console.log('languages: ',languages)
 		console.log('window.languages: ',window.languages)
 		languages.about();
 		// ,'promql'
-		languages.init(['oracle', 'promql', 'redis'], true);
+		languages.init(['oracle', 'promql' ,'redis'], true);
 		// console.log('languages._aliases: ',languages._aliases)
 		// languages.setAliases({name:'xxx'})
 		// console.log('languages._aliases： ',languages._aliases)
 		// console.log('获取：',monaco.languages.getLanguages())
 
 		console.log('============================================');
-		let getLang = 'redis';
-		let lang = languages.getLanguage(getLang, true);
+		// let getLang = 'redis';
+		// let lang = languages.getLanguage(getLang, true);
 		// lang.loader().then(e => {
 		// 	console.log(getLang, '配置：', e);
 		// });
-		let result = await lang.loader();
-		console.log('[同步] ', getLang, '配置：', result);
+		// let result = await lang.loader();
+		// console.log('[同步] ', getLang, '配置：', lang,result);
 		
 		// console.log('monaco现在支持 redis:', languages.getLanguage('redis', true));
 
@@ -56,6 +55,7 @@ export default {
 	mounted() {
 		let $dom = document.getElementById('monaco-editor');
 		this.value = this.get(this.valueKey);
+		console.log('根据别名查询到id：',languages.getLanguageId('Redis'))
 		let model = monaco.editor.createModel(this.value, this.language);
 		this.editor = monaco.editor.create($dom, {
 			wordWrap: 'on',
@@ -64,15 +64,15 @@ export default {
 			selectionHighlight: true,
 			model: model
 		});
-		console.log('model:', model, this.editor);
+		// console.log('model:', model, this.editor);
 		/* 		成功*/
 		this.editor.onDidChangeModelContent(e => {
-			console.log(this.editor.getModel())
-			console.log('e： ',e)
+			// console.log(this.editor.getModel())
+			// console.log('e： ',e)
 			// 只 更新数据状态及保存本地缓存
 			this.value = this.editor.getValue();
 			window.localStorage.setItem(this.valueKey, this.value);
-this.saveHistoryHandle();
+			this.saveHistoryHandle();
 			// 保存历史记录
 			// setTimeout(() => {
 			// 	this.saveHistoryHandle();
@@ -84,7 +84,11 @@ this.saveHistoryHandle();
 			console.log('language: ', this.editor.getModel().getModeId());
 			let model = this.editor.getModel();
 			monaco.editor.setModelLanguage(model, this.language);
-			console.log(this.editor.getModel().getModeId());
+			// let lang = languages.getLanguage(this.language, true);
+			// lang.loader().then(e => {
+			// 	console.log(this.language, '配置：', e);
+			// });
+			// console.log(this.editor.getModel().getModeId());
 		},
 		get(key) {
 			let result = window.localStorage.getItem(key);
@@ -156,9 +160,9 @@ this.saveHistoryHandle();
 			stateKey: '_stateKey',
 			modelKey: '_modelKey',
 			editor: null,
-			language: 'redis',
+			language: 'custom-redis',
 			selects: [
-				{ label: 'redis', value: 'redis' },
+				{ label: 'redis', value: 'custom-redis' },
 				{ label: 'SQL', value: 'sql' },
 				{ label: 'Oracle', value: 'oracle' },
 				{ label: 'PromQL', value: 'promql' },

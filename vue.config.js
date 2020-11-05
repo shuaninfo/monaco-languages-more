@@ -3,9 +3,9 @@ const path = require('path')
 function resolve(dir) {
 	return path.join(__dirname, '.', dir)
 }
-require("@babel/core").transform("code", {
-	plugins: ["@babel/plugin-proposal-class-properties"]
-});
+// require("@babel/core").transform("code", {
+// 	plugins: ["@babel/plugin-proposal-class-properties"]
+// });
 module.exports = {
 	publicPath: process.env.NODE_ENV === 'production' ? './src/index.js' : '/',
 	outputDir: 'dist',
@@ -19,7 +19,7 @@ module.exports = {
 			title: 'monaco languages more'
 		}
 	},
-	//   transpileDependencies: ['highlight.js'],
+	  // transpileDependencies: ['highlight.js'],
 	chainWebpack(config) {
 		config.resolve.alias
 			.set('~', resolve('examples'))
@@ -37,9 +37,9 @@ module.exports = {
 				exclude: [
 					path.resolve(__dirname, "node_modules")
 				],
-				options: {
-					"presets": ["@babel/preset-env"]
-				}
+				// options: {
+				// 	"presets": ["@babel/preset-env"]
+				// }
 			}]
 		}
 	}

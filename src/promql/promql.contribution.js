@@ -1,8 +1,11 @@
-import * as promql from './promql'; 
+// import * as promql from './promql'; 
+import {
+	customImport
+} from '../utils.js'
 export const promLanguageDefinition = {
 	id: 'promql',
-	extensions: [ '.promql' ],
-	aliases: [ 'Prometheus', 'prometheus', 'prom', 'Prom', 'promql', 'Promql', 'promQL', 'PromQL' ],
+	extensions: ['.promql'],
+	aliases: ['Prometheus', 'prometheus', 'prom', 'Prom', 'promql', 'Promql', 'promQL', 'PromQL'],
 	mimetypes: [],
-	loader: () => import('./promql')
+	loader: () => customImport('promql')
 };

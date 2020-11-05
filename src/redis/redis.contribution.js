@@ -1,8 +1,10 @@
-import * as redis from './redis';
+import {
+	customImport
+} from '../utils.js'
 export const redisLanguageDefinition = {
-	id: 'redis',
+	id: 'custom-redis',
 	extensions: ['.redis'],
-	aliases: ['REDIS', 'Redis', 'redis','rs'],
+	aliases: ['custom-redis', 'redis', 'REDIS', 'Redis', 'rs'],
 	mimetypes: [],
-	loader: () => import('./redis')  // eslint-disable-line @typescript-eslint/explicit-function-return-type
+	loader: () => customImport('redis') // eslint-disable-line @typescript-eslint/explicit-function-return-type
 };

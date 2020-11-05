@@ -17,7 +17,6 @@ import {
 	redisLanguageDefinition
 } from './redis/redis.contribution';
 
-
 // 统一导出语言配置
 export {
 	functionExt,
@@ -105,6 +104,7 @@ export const getLanguage = function(alias, ignoreCase) {
 			break;
 		}
 	}
+	console.log('result: ',result)
 	return result;
 }
 
@@ -197,7 +197,6 @@ function _register(definition, isAutoComplete) {
 			// 高亮
 			monaco.languages.setMonarchTokensProvider(languageId, mod.language);
 			// 配置
-			console.log('注册：', languageId)
 			monaco.languages.setLanguageConfiguration(languageId, mod.conf);
 
 			// 自动提示

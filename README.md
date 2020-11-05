@@ -1,6 +1,6 @@
 
 
-> webpack配置问题：
+> webpack配置问题：打包后使用import出错
 
 ### 使用方法
 
