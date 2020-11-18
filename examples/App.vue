@@ -11,6 +11,7 @@
 			<button @click="removeHistoryHandle">清除History</button>
 			<button @click="loadHistoryHandle">加载本地History</button>
 			<button @click="printInfoHandle">打印必要信息</button>
+			<button @click="inserText">插入测试</button>
 		</div>
 		<div id="monaco-editor"></div>
 	</div>
@@ -56,20 +57,34 @@ export default {
 		let $dom = document.getElementById('monaco-editor');
 		this.value = this.get(this.valueKey);
 		console.log('根据别名查询到id：',languages.getLanguageId('Redis'))
-		let model = monaco.editor.createModel(this.value, this.language);
+		// let model = monaco.editor.createModel(this.value, this.language);
+		// this.editor = monaco.editor.create($dom, {
+		// 	wordWrap: 'on',
+		// 	theme: 'vs', // 默认
+		// 	automaticLayout: true,
+		// 	selectionHighlight: true,
+		// 	model: model
+		// });
+		
+		// ==============================
 		this.editor = monaco.editor.create($dom, {
+			value: this.value,
+			// monaco-editor-webpack-plugin 配置 https://github.com/microsoft/monaco-editor-webpack-plugin/issues/32
+			language: this.language,
 			wordWrap: 'on',
 			theme: 'vs', // 默认
 			automaticLayout: true,
 			selectionHighlight: true,
-			model: model
 		});
+		
 		// console.log('model:', model, this.editor);
 		/* 		成功*/
 		this.editor.onDidChangeModelContent(e => {
 			// console.log(this.editor.getModel())
 			// console.log('e： ',e)
 			// 只 更新数据状态及保存本地缓存
+			let len = this.editor.getModel()['_commandManager'].past.length
+			console.log('插入测试：', len)
 			this.value = this.editor.getValue();
 			window.localStorage.setItem(this.valueKey, this.value);
 			this.saveHistoryHandle();
@@ -148,9 +163,15 @@ export default {
 			console.log('model: ', this.editor.getModel());
 			console.log('editor: ', this.editor);
 		},
-		auto(language) {
-			// TODO 设置激动提示
-		}
+		inserText(){
+			let selection = this.editor.getSelection();
+			// this.editor.setValue(`${Math.random()}`)
+			this.editor.executeEdits(null, [{
+			      range: selection,
+			      text: `${Math.random()}`,
+			      forceMoveMarkers: true
+			    }]);
+		},
 	},
 	data() {
 		return {
