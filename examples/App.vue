@@ -21,8 +21,8 @@
 import * as monaco from 'monaco-editor';
 // 不推荐 需要在package.json把name改为monaco-languages-more-dev，在能npm i -D monaco-languages-more
 
-import * as languages from '../dist/index.min.js';
-// import * as languages from '../src/index.js';
+// import * as languages from '../dist/index.min.js';
+import * as languages from '../src/index.js';
 
 import EditStackElement from './stackelement.js';
 export default {
@@ -32,12 +32,14 @@ export default {
 		console.log('languages: ',languages)
 		console.log('window.languages: ',window.languages)
 		languages.about();
-		// ,'promql'
-		languages.init(['oracle', 'promql' ,'redis'], true);
+		// ,'promql', 也可以使用别名如：custom-redis可以替换为redis
+		// suggest自动提示
+		languages.init(['oracle', 'promql' ,'custom-redis'], {suggest:true});
 		// console.log('languages._aliases: ',languages._aliases)
 		// languages.setAliases({name:'xxx'})
 		// console.log('languages._aliases： ',languages._aliases)
-		// console.log('获取：',monaco.languages.getLanguages())
+		console.log('根据别名获取ID：', languages.getLanguage('custom-redis'));
+		console.log('获取：',monaco.languages.getLanguages());
 
 		console.log('============================================');
 		// let getLang = 'redis';
@@ -84,7 +86,7 @@ export default {
 			// console.log('e： ',e)
 			// 只 更新数据状态及保存本地缓存
 			let len = this.editor.getModel()['_commandManager'].past.length
-			console.log('插入测试：', len)
+			// console.log('插入测试：', len)
 			this.value = this.editor.getValue();
 			window.localStorage.setItem(this.valueKey, this.value);
 			this.saveHistoryHandle();
@@ -135,7 +137,7 @@ export default {
 
 			window.localStorage.setItem(this.historyKey, _history);
 
-			console.log('保存历史记录成功：', size, 'kb ',valueSize,'kb ', ' 长度：',historyObj.past.length,historyObj.future.length);
+			// console.log('保存历史记录成功：', size, 'kb ',valueSize,'kb ', ' 长度：',historyObj.past.length,historyObj.future.length);
 		},
 		// 加载hostory
 		loadHistoryHandle() {
@@ -183,7 +185,7 @@ export default {
 			editor: null,
 			language: 'custom-redis',
 			selects: [
-				{ label: 'redis', value: 'custom-redis' },
+				{ label: 'custom-redis', value: 'custom-redis' },
 				{ label: 'SQL', value: 'sql' },
 				{ label: 'Oracle', value: 'oracle' },
 				{ label: 'PromQL', value: 'promql' },

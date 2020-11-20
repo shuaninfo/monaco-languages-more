@@ -34,11 +34,25 @@ export {
  * 语言包已经支持的语言
  */
 // export const languages = ['oracle','promql','radis','mongodb']
-export const languages = {
+export const definitions = {
 	// key 为Definition.id
 	'promql': promLanguageDefinition,
 	'oracle': oracleLanguageDefinition,
 	'redis': redisLanguageDefinition
+}
+// 补充别名，不建议直接使用
+// 格式：{语言ID: 别名数组}
+export var _aliases = {
+	'go': ['go', 'golang', 'GO', 'GOLANG'],
+	'redis': ['redis', 'Redis', 'REDIS']
+}
+
+export const defaultConfig = {
+	langs: Object.keys(definitions), // 注册语言
+	suggest: false, // 自动提示
+	aliases: {
+		// 'custom-redis': []
+	} // 补充别名，在定义的基础上添加
 }
 // TODO 使用Object.defineProperty定义languages属性不可改？？
 
@@ -48,12 +62,7 @@ export const languages = {
 // TODO 修改monaco自带语言包的信息，比如：每个语言添加一个语言名称的方法，如：mysql在functions添加mysql
 // 
 
-// 补充别名，不建议直接使用
-// 格式：{语言ID: 别名数组}
-export var _aliases = {
-	'go': ['go', 'golang', 'GO', 'GOLANG'],
-	'redis': ['redis', 'Redis', 'REDIS']
-}
+
 export const setAliases = function(aliases, append) {
 	if (!append) {
 		// false|undefined
@@ -77,9 +86,20 @@ export const setAliases = function(aliases, append) {
  */
 export const getLanguage = function(alias, ignoreCase) {
 	// 当前monaco支持的语言，请在init之后再调用
-	let lowerCaseAlias = alias.toLowerCase()
-	let langs = monaco.languages.getLanguages();
 
+	// 先从definitions中过去，如果没有再从monaco.languages中获取，防止本地别名和monaco中的重复
+	let result = _getByDefinition(definitions, alias, ignoreCase)
+	if (result) {
+		return result
+	}
+
+	let langs = monaco.languages.getLanguages();
+	result = _getByDefinition(langs, alias, ignoreCase)
+	return result
+}
+
+function _getByDefinition(langs, alias, ignoreCase) {
+	let lowerCaseAlias = alias.toLowerCase()
 	let result = null
 	for (let i in langs) {
 		// 根据别名获取ID，
@@ -104,7 +124,6 @@ export const getLanguage = function(alias, ignoreCase) {
 			break;
 		}
 	}
-	console.log('result: ',result)
 	return result;
 }
 
@@ -131,18 +150,25 @@ export async function getLanguageConfig(alias, ignoreCase) {
 
 
 export const about = function() {
-	console.info('monaco语言包，现支持：', Object.keys(languages).join('、'))
+	console.info('monaco语言包，现支持：', Object.keys(definitions).join('、'))
 }
 
 
 /**
  * 注册monaco支持的语言
  * @param {Array} langs 注册的语言数组 - 支持alias
- * @param {Boolean} isAutoComplete 是否注册自动提示
- * @return {Object} 根据langs获取languages配置，数据格式同languages
+ * @param {Object|null} config suggest: 是否注册自动提示
+ * @return {Object|null} 根据langs获取languages配置，数据格式同languages
  */
-export const init = function(langs, isAutoComplete) {
-	register(langs, isAutoComplete);
+export const init = function(langs, config) {
+	if (config) {
+		Object.assign(defaultConfig, config);
+	}
+	if (!langs || !(langs instanceof Array) || langs.length == 0) {
+		console.error('[language-more] init(arg0, arg1)请使用正确的参数列表：arguments(Array, Object|null)')
+		return false
+	}
+	return register(langs, defaultConfig.suggest);
 };
 
 /** TODO 注册monaco支持的语言
@@ -155,34 +181,36 @@ export const register = function(langs, isAutoComplete) {
 		console.error('[language-more] monaco is ', monaco, ' 请导入monaco')
 		return;
 	}
-	if (!langs || typeof langs != 'Array' || langs.length > 0) {
+	if (!langs || !(langs instanceof Array) || langs.length == 0) {
 		console.warn('[language-more] register(arg0, arg1)请使用正确的参数列表：arguments(Array, Boolean)')
 	}
 
-	let result = {}
+	let registerDefinitions = {}
 	if (langs[0] == 'all') {
 		// 全部
-		result = languages
+		registerDefinitions = definitions
 	} else {
 		// 部分
 		for (let i in langs) {
 			// 传入的参数
 			let alias = langs[i]
-			for (let key in languages) {
-				let supportLang = languages[key];
-				// TODO 别名
-				if (supportLang.aliases.indexOf(alias) > -1) {
-					result[key] = supportLang
+			for (let key in definitions) {
+				let definition = definitions[key];
+				// id 或 别名
+				if (definition.id == alias || definition.aliases.indexOf(alias) > -1) {
+					registerDefinitions[key] = definition
 				}
-			} // end languages
-		} // end langs
+			} // end for(...)
+		} // end for(langs)
 	}
+
 	// 循环注册 _register()
-	for (let key in result) {
+	for (let key in registerDefinitions) {
 		// 注册进入monaco
-		_register(result[key], isAutoComplete)
+		_register(registerDefinitions[key], isAutoComplete)
 	}
-	return result
+	// 如果没有注册，则返回为null
+	return Object.keys(registerDefinitions).length == 0 ? null : registerDefinitions
 }
 
 /**
