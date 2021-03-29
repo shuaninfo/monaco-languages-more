@@ -12,6 +12,7 @@
 			<button @click="loadHistoryHandle">加载本地History</button>
 			<button @click="printInfoHandle">打印必要信息</button>
 			<button @click="inserText">插入测试</button>
+			<button @click="formatSQL()">代码格式化</button>
 		</div>
 		<div id="monaco-editor"></div>
 	</div>
@@ -25,9 +26,29 @@ import * as monaco from 'monaco-editor';
 import * as languages from '../src/index.js';
 
 import EditStackElement from './stackelement.js';
+
+const sqlfmt = (sql) => {
+    const loc = document.location;
+    const base = loc.protocol + "//" + loc.host;
+    const url = base + "/sqlfmt?sql=" + encodeURIComponent(sql);
+    return fetch(url).then((response) => {
+      return response.text();
+    });
+  };
 export default {
 	name: 'App',
 	async created() {
+		monaco.languages.registerDocumentFormattingEditProvider("sql", {
+		      async provideDocumentFormattingEdits(model) {
+		        var formatted = await sqlfmt(model.getValue());
+		        return [
+		          {
+		            range: model.getFullModelRange(),
+		            text: formatted,
+		          },
+		        ];
+		      }
+		    });
 		// configeDefinition
 		console.log('languages: ',languages)
 		console.log('window.languages: ',window.languages)
@@ -97,6 +118,10 @@ export default {
 		});
 	},
 	methods: {
+		formatSQL(){
+			console.log('格式化代码')
+			this.editor.getAction('editor.action.formatDocument').run();
+		},
 		selectChangeHandler() {
 			console.log('language: ', this.editor.getModel().getModeId());
 			let model = this.editor.getModel();
@@ -183,7 +208,7 @@ export default {
 			stateKey: '_stateKey',
 			modelKey: '_modelKey',
 			editor: null,
-			language: 'custom-redis',
+			language: 'sql',
 			selects: [
 				{ label: 'custom-redis', value: 'custom-redis' },
 				{ label: 'SQL', value: 'sql' },
