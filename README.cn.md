@@ -1,4 +1,3 @@
-[中文](./README.cn.md)
 > 组件还不成熟，如果使用请查看/examples/App.vue
 
 ```javascript
