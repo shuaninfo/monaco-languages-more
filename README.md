@@ -18,3 +18,6 @@ import * as languagesmore from 'monaco-languages-more';
 #### build
 
 > npm run build:lib
+
+#### 方法
+* 根据lang id获取相应的函数等
