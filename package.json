@@ -1,6 +1,6 @@
 {
-	"name": "monaco-languages-more",
-	"version": "1.4.0",
+	"name": "@shuaninfo/monaco-languages",
+	"version": "1.6.2",
 	"description": "monaco more language ",
 	"scripts": {
 		"serve": "vue-cli-service serve",

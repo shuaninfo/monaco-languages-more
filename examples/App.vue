@@ -5,7 +5,7 @@
 		</div>
 		<div class="tools">
 			<select id="select-languages" v-model="language" @change="selectChangeHandler">
-				<option v-for="(item, i) in selects" :value="item.value">{{ item.label }}</option>
+				<option v-for="(item, i) in selects" :key="i" :value="item.value">{{ item.label }}</option>
 			</select>
 			<button @click="saveHistoryHandle">保存History</button>
 			<button @click="removeHistoryHandle">清除History</button>
@@ -38,6 +38,7 @@ const sqlfmt = (sql) => {
 export default {
 	name: 'App',
 	async created() {
+    monaco
 		monaco.languages.registerDocumentFormattingEditProvider("sql", {
 		      async provideDocumentFormattingEdits(model) {
 		        var formatted = await sqlfmt(model.getValue());
@@ -49,29 +50,20 @@ export default {
 		        ];
 		      }
 		    });
-		// configeDefinition
-		console.log('languages: ',languages)
-		console.log('window.languages: ',window.languages)
 		languages.about();
 		// ,'promql', 也可以使用别名如：custom-redis可以替换为redis
 		// suggest自动提示
-		languages.init(['oracle', 'promql' ,'custom-redis'], {suggest:true});
-		// console.log('languages._aliases: ',languages._aliases)
-		// languages.setAliases({name:'xxx'})
-		// console.log('languages._aliases： ',languages._aliases)
+		languages.init(['oracle', 'promql' ,'mongodb','custom-redis'], {suggest:true});
 		console.log('根据别名获取ID：', languages.getLanguage('custom-redis'));
-		console.log('获取：',monaco.languages.getLanguages());
+    const langAll = monaco.languages.getLanguages()
+		console.log('获取所有的: ',langAll);
+    let mysqlLangDef =  langAll.filter(item=>item.id == 'mysql')[0]
+    console.log('mysql语言定义:', mysqlLangDef)
+    mysqlLangDef.loader().then(resp=>{
+      console.log('mysql语言 loading: ', resp)
+    })
 
 		console.log('============================================');
-		// let getLang = 'redis';
-		// let lang = languages.getLanguage(getLang, true);
-		// lang.loader().then(e => {
-		// 	console.log(getLang, '配置：', e);
-		// });
-		// let result = await lang.loader();
-		// console.log('[同步] ', getLang, '配置：', lang,result);
-		
-		// console.log('monaco现在支持 redis:', languages.getLanguage('redis', true));
 
 		console.log('============================================');
 		
@@ -80,14 +72,6 @@ export default {
 		let $dom = document.getElementById('monaco-editor');
 		this.value = this.get(this.valueKey);
 		console.log('根据别名查询到id：',languages.getLanguageId('Redis'))
-		// let model = monaco.editor.createModel(this.value, this.language);
-		// this.editor = monaco.editor.create($dom, {
-		// 	wordWrap: 'on',
-		// 	theme: 'vs', // 默认
-		// 	automaticLayout: true,
-		// 	selectionHighlight: true,
-		// 	model: model
-		// });
 		
 		// ==============================
 		this.editor = monaco.editor.create($dom, {
@@ -100,21 +84,14 @@ export default {
 			selectionHighlight: true,
 		});
 		
-		// console.log('model:', model, this.editor);
 		/* 		成功*/
 		this.editor.onDidChangeModelContent(e => {
-			// console.log(this.editor.getModel())
-			// console.log('e： ',e)
 			// 只 更新数据状态及保存本地缓存
 			let len = this.editor.getModel()['_commandManager'].past.length
 			// console.log('插入测试：', len)
 			this.value = this.editor.getValue();
 			window.localStorage.setItem(this.valueKey, this.value);
 			this.saveHistoryHandle();
-			// 保存历史记录
-			// setTimeout(() => {
-			// 	this.saveHistoryHandle();
-			// }, 100);
 		});
 	},
 	methods: {
@@ -126,11 +103,6 @@ export default {
 			console.log('language: ', this.editor.getModel().getModeId());
 			let model = this.editor.getModel();
 			monaco.editor.setModelLanguage(model, this.language);
-			// let lang = languages.getLanguage(this.language, true);
-			// lang.loader().then(e => {
-			// 	console.log(this.language, '配置：', e);
-			// });
-			// console.log(this.editor.getModel().getModeId());
 		},
 		get(key) {
 			let result = window.localStorage.getItem(key);
@@ -154,7 +126,7 @@ export default {
 			
 			// 推荐使用方法，在getEditStack时设置数量
 			let historyObj = languages.getEditStack(model, 50)
-			console.log('===: ',historyObj)
+			// console.log('===: ',historyObj)
 			
 			let _history = JSON.stringify(historyObj);
 			let size = unescape(encodeURIComponent(_history)).length / 1024;
@@ -208,7 +180,7 @@ export default {
 			stateKey: '_stateKey',
 			modelKey: '_modelKey',
 			editor: null,
-			language: 'sql',
+			language: 'mongodb',
 			selects: [
 				{ label: 'custom-redis', value: 'custom-redis' },
 				{ label: 'SQL', value: 'sql' },

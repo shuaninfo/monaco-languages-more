@@ -19,5 +19,9 @@ import * as languagesmore from 'monaco-languages-more';
 
 > npm run build:lib
 
+#### 发布
+
+> npm publish --access public
+
 #### 方法
 * 根据lang id获取相应的函数等
