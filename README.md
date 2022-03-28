@@ -21,6 +21,7 @@ import * as languagesmore from 'monaco-languages-more';
 
 #### 发布
 
+> npm login
 > npm publish --access public
 
 #### 方法
