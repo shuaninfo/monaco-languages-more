@@ -11,8 +11,8 @@ export const getEditStack = function(model, limit) {
 	if (typeof limit === 'number' && !isNaN(limit)) {
 		return {
 			currentOpenStackElement: model[_key].currentOpenStackElement,
-			past: model[_key].past.slice(-limit),
-			future: model[_key].future.slice(-limit)
+			past: model[_key].past?model[_key].past.slice(-limit):[],
+			future: model[_key].future?model[_key].future.slice(-limit):[]
 		}
 	} else {
 		return {
@@ -28,6 +28,8 @@ export const setEditStack = function(model, stack, limit) {
 		console.warn('[languages] getEditStack 参数错误，[model, stack, limit]', model, stack, limit)
 		return false
 	}
+	model[_key].past = model[_key].past||[]
+	model[_key].future = model[_key].future||[]
 	if (stack.past && stack.past.length) {
 		let result = _create(stack.past, limit)
 		model[_key].past.push(...result)
