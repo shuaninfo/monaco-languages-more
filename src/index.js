@@ -14,6 +14,9 @@ import {
     oracleLanguageDefinition
 } from './oracle/oracle.contribution';
 import {
+    pgsqlLanguageDefinition
+} from './pgsql/pgsql.contribution';
+import {
     redisLanguageDefinition
 } from './redis/redis.contribution';
 
@@ -29,6 +32,7 @@ export {
     setEditStack,
     promLanguageDefinition,
     oracleLanguageDefinition,
+    pgsqlLanguageDefinition,
     redisLanguageDefinition,
     mongodbLanguageDefinition
 };
@@ -41,6 +45,7 @@ export const definitions = {
     // key 为Definition.id
     'promql': promLanguageDefinition,
     'oracle': oracleLanguageDefinition,
+    'pgsql':pgsqlLanguageDefinition,
     'redis': redisLanguageDefinition,
     'mongodb': mongodbLanguageDefinition
 }
