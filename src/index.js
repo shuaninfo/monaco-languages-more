@@ -17,6 +17,9 @@ import {
     pgsqlLanguageDefinition
 } from './pgsql/pgsql.contribution';
 import {
+    mssqlLanguageDefinition
+} from './mssql/mssql.contribution';
+import {
     redisLanguageDefinition
 } from './redis/redis.contribution';
 
@@ -33,6 +36,7 @@ export {
     promLanguageDefinition,
     oracleLanguageDefinition,
     pgsqlLanguageDefinition,
+    mssqlLanguageDefinition,
     redisLanguageDefinition,
     mongodbLanguageDefinition
 };
@@ -46,6 +50,7 @@ export const definitions = {
     'promql': promLanguageDefinition,
     'oracle': oracleLanguageDefinition,
     'pgsql':pgsqlLanguageDefinition,
+    'mssql':mssqlLanguageDefinition,
     'redis': redisLanguageDefinition,
     'mongodb': mongodbLanguageDefinition
 }

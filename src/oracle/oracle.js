@@ -18,7 +18,8 @@ export const conf = {
 		['[', ']'],
 		['(', ')']
 	],
-	autoClosingPairs: [{
+	autoClosingPairs: [
+		{
 			open: '{',
 			close: '}'
 		},
@@ -39,7 +40,8 @@ export const conf = {
 			close: "'"
 		}
 	],
-	surroundingPairs: [{
+	surroundingPairs: [
+		{
 			open: '{',
 			close: '}'
 		},
